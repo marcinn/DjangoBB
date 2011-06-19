@@ -66,7 +66,7 @@ def index(request, full=True):
                 'users_online': users_online,
                 'online_count': users_count,
                 'guest_count': guest_count,
-                'last_user': User.objects.latest('date_joined'),
+                'last_user': User.objects.filter(is_active=True).latest('date_joined'),
                 }
     if full:
         return to_return
