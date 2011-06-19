@@ -55,7 +55,7 @@ class AddPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['body']
+        fields = ('name', 'body', 'attachment',)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -71,8 +71,7 @@ class AddPostForm(forms.ModelForm):
         self.fields['body'].widget = forms.Textarea(attrs={'class':'markup', 'rows':'20', 'cols':'95'})
 
         if not forum_settings.ATTACHMENT_SUPPORT:
-            self.fields['attachment'].widget = forms.HiddenInput()
-            self.fields['attachment'].required = False
+            del self.fields['attachment']
 
     def clean(self):
         '''
@@ -132,17 +131,19 @@ class AddPostForm(forms.ModelForm):
 
 class EditPostForm(forms.ModelForm):
     name = forms.CharField(required=False, label=_('Subject'),
-                           widget=forms.TextInput(attrs={'size':'115'}))
+                           widget=forms.TextInput())
 
     class Meta:
         model = Post
-        fields = ['body']
+        fields = ('name', 'body',)
 
     def __init__(self, *args, **kwargs):
         self.topic = kwargs.pop('topic', None)
         super(EditPostForm, self).__init__(*args, **kwargs)
         self.fields['name'].initial = self.topic
-        self.fields['body'].widget = forms.Textarea(attrs={'class':'markup'})
+        self.fields['body'].widget = forms.Textarea(attrs={'class':'markup', 'cols': 95})
+        if not self.instance.pk == self.instance.topic.head.pk:
+            del self.fields['name']
 
     def save(self, commit=True):
         post = super(EditPostForm, self).save(commit=False)
