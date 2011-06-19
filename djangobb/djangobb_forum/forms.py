@@ -148,9 +148,10 @@ class EditPostForm(forms.ModelForm):
     def save(self, commit=True):
         post = super(EditPostForm, self).save(commit=False)
         post.updated = datetime.now()
-        topic_name = self.cleaned_data['name']
-        if topic_name:
-            post.topic.name = topic_name
+        if 'topic' in self.cleaned_data:
+            topic_name = self.cleaned_data['name']
+            if topic_name:
+                post.topic.name = topic_name
         if commit:
             post.topic.save()
             post.save()

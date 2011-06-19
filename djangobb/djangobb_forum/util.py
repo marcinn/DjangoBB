@@ -253,7 +253,11 @@ def urlize(data):
 
 def _smile_replacer(data):
     for smile, path in _SMILES:
+        path = path.replace('/', '##/##')
+        path = path.replace(':', '##:##')
         data = smile.sub(path, data)
+    data = data.replace('##/##', '/')
+    data = data.replace('##:##', ':')
     return data
 
 def smiles(data):
