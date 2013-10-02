@@ -62,4 +62,3 @@ admin.site.register(Reputation, ReputationAdmin)
 admin.site.register(Report, ReportAdmin)
 admin.site.register(Ban, BanAdmin)
 
-admin.site.disable_action('delete_selected')  #disabled, because delete_selected ignoring delete model method
